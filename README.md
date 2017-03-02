@@ -1,1 +1,2 @@
-# COSC326
+# COSC326 assignments.
+
