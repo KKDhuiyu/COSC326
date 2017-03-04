@@ -1,5 +1,5 @@
 /*
- * This Class provides the data structure that works like a LinkedList.
+ * This Class provides the data structure that acts like a LinkedList.
  * so that we can track back to the previous tiles to see if the coordinate 
  * has been visited before.
  */
@@ -18,7 +18,7 @@ public class Tile {
     private Tile previousTile; // LinkedList structure.
 
     /**
-     * This is a constructor that initializes the data field and set the.
+     * This is a constructor that initializes the data field and sets the
      * previous Tile to null.
      *
      * @param color the default color that is taken from the first line of the
@@ -33,20 +33,20 @@ public class Tile {
 
     /**
      * This is a constructor that initializes a Tile based on its previous tile.
-     * and the color passed as a parameter.
+     * and the colour passed as a parameter.
      *
      * @param color that is from the related DNA lines.
      * @param prev its previous tile.
      */
     public Tile(String color, Tile prev) {
-        this.color = prev.getColor();
+        this.color = color;
         this.x = prev.getX();
         this.y = prev.getY();
         this.previousTile = prev;
     }
 
     /**
-     * Get the x coordinate from the tile object.
+     * Accesses the x coordinate from the tile object.
      *
      * @return its x coordinate.
      */
@@ -55,7 +55,7 @@ public class Tile {
     }
 
     /**
-     * Get the y coordinate from the tile object.
+     * Accesses the y coordinate from the tile object.
      *
      * @return its y coordinate.
      */
@@ -64,7 +64,7 @@ public class Tile {
     }
 
     /**
-     * Get the state from the tile object.
+     * Accesses the state from the tile object.
      *
      * @return its current state.
      */
@@ -73,7 +73,7 @@ public class Tile {
     }
 
     /**
-     * Get its previous tile from the tile object.
+     * Accesses its previous tile from the tile object.
      *
      * @return its previous tile.
      */
@@ -82,7 +82,7 @@ public class Tile {
     }
 
     /**
-     * Set the X in the data field to the parameter x.
+     * Sets the X in the data field to the parameter x.
      *
      * @param x the new value of the X in the data field
      */
@@ -91,7 +91,7 @@ public class Tile {
     }
 
     /**
-     * Set the y in the data field to the parameter y.
+     * Sets the y in the data field to the parameter y.
      *
      * @param y the new value of the y in the data field
      */
@@ -100,7 +100,7 @@ public class Tile {
     }
 
     /**
-     * Set the color in the data field to the parameter color.
+     * Sets the colour in the data field to the parameter color.
      *
      * @param color the new value of the color in the data field
      */
@@ -109,14 +109,14 @@ public class Tile {
     }
 
     /**
-     * This is a override toString method for testing purpose.
+     * This is an override toString method for testing purposes.
      *
      * @return testing outputs.
      */
     @Override
     public String toString() {
         // debug purpose
-        return "(" + getX() + "," + getY() + ")  state:" + getColor()/*+"prev: "
+        return "(" + getX() + "," + getY() + ")  state:" + getColor()/*+"prev:"
                   +getPrev().toString()*/;
     }
 }
