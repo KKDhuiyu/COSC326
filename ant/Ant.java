@@ -8,6 +8,9 @@
  */
 package ant;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -21,33 +24,64 @@ public class Ant {
 
     /**
      * @param args the command line arguments.
+     * @throws java.io.IOException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // make an array list to store inputs
+        BufferedReader bufferedReader;
+        bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         ArrayList<String> dnaList = new ArrayList<>();
-        Scanner sc = new Scanner(System.in);
+        ArrayList<String> outputs = new ArrayList<>();
         // the steps the ant will move
         int steps = 20;
-        while (sc.hasNextLine()) { // take inputs till "" is inputted.
-            String dna = sc.nextLine();
-            if ("".equals(dna)) {
-                break;
-            } else if (dna.substring(0, 1).equals("#")); else {
-                dnaList.add(dna);
+   
+        String input;
+        while ((input = bufferedReader.readLine()) != null) {
+            if ("".equals(input)) {
+                    break;
+                } else if (input.substring(0, 1).equals("#")); else {
+                    try {
+                        if (Integer.valueOf(input) > 0) {
+                            steps = Integer.valueOf(input);
+                        }
+                    } catch (NumberFormatException e) {
+                        dnaList.add(input);
+                    }
+
+                }
+            while ((input = bufferedReader.readLine()) != null) {
+             
+                if ("".equals(input)) {
+                    break;
+                } else if (input.substring(0, 1).equals("#")); else {
+                    try {
+                        if (Integer.valueOf(input) > 0) {
+                            steps = Integer.valueOf(input);
+                        }
+                    } catch (NumberFormatException e) {
+                        dnaList.add(input);
+                    }
+
+                }
+                
             }
+            if (!dnaList.isEmpty()) {
+                   
+                    outputs.add(move(steps, dnaList));
+                    dnaList.clear();
+                }
+           
         }
-
-        System.out.print(move(steps, dnaList));
-        // call move method when finished collecting DNA.
-
+         for (String s : outputs) {
+                System.out.print(s);
+            }
     }
-
-    /**
-     * This is a method that makes the ant "move" around the "tiles".
-     *
-     * @param steps the number of steps you are to follow the ant for.
-     * @param dnaList the ArrayList to store the ants DNA.
-     */
+        /**
+         * This is a method that makes the ant "move" around the "tiles".
+         *
+         * @param steps the number of steps you are to follow the ant for.
+         * @param dnaList the ArrayList to store the ants DNA.
+         */
     public static String move(int steps, ArrayList<String> dnaList) {
         String result = "";
         //the first line of the DNA determines the default state
@@ -57,7 +91,7 @@ public class Ant {
         Tile tile = new Tile(defaultState);
         //  System.out.println(tile.toString()); //for testing purpose
         boolean started = false;
-        for (int i = 1; i < steps; i++) {
+        for (int i = 0; i < steps; i++) {
 
             String dna = "";
             for (int j = 0; j < dnaList.size(); j++) {
@@ -88,7 +122,7 @@ public class Ant {
                 lastMove = nextMove; // tracking the directions
                 // linked list implementation
                 if (started == false) {
-                    result += printScenario(dnaList, tile);
+                    //result += printScenario(dnaList, tile);
                 }
                 tile = new Tile(defaultState, tile);
                 started = true;
@@ -123,8 +157,11 @@ public class Ant {
                     }
                     previousTile = previousTile.getPrev();
                 }
-                result += printScenario(dnaList, tile);
-                //prints each scenario as it happens.
+                if (i == steps - 1) {
+                    result += printScenario(dnaList, tile);
+                    //prints only the last scenario.
+                }
+
             }
         }
         return result;
