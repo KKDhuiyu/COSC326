@@ -27,20 +27,25 @@ public class G711 {
      * @param args The commend line inputs;
      */
     public static void main(String[] args) {
+        int count=0;
         //final long startTime = System.currentTimeMillis();
         for (int i = 100; i < 999; i++) { // for each number between 100-999. 
             g711 = i;
             countSolutions(); // count the solutions. 
         }
-        for (int i = 0; i < 900; i++) {// for each index in the solutionCount list. 
-            if (solutionCount[i] == 1) {// if it only has the unique solution.
-                g711 = i + 100; // give its value to g711. 
-                printSolution(); // call the print method to echo the result.
+        for (int i = 0; i < 900; i++) {
+// for each index in the solutionCount list. 
+            if (solutionCount[i] == 1) {
+// if it only has the unique solution.
+                g711 = i + 100; 
+// give its value to g711. 
+                printSolution(); 
+// call the print method to echo the result.
+                count++;
             }
         }
-        // System.out.println(solutionCount[889]);
-        // final long endTime = System.currentTimeMillis();
-        // System.out.println("Total execution time: " + (endTime - startTime) );
+        System.out.println(count+" solutions");
+        
     }
 
     /**
@@ -85,7 +90,8 @@ public class G711 {
                     if (d >= c) {
                         if (a * b * c * d == cents && a + b + c + d == g711) {
                             //print results in a certain format
-                            System.out.println("$" + df.format((double) g711 / 100) + " = $"
+                            System.out.println("$" + 
+                                    df.format((double) g711 / 100) + " = $"
                                     + df.format((double) a / 100) + " + $"
                                     + df.format((double) b / 100) + " + $"
                                     + df.format((double) c / 100) + " + $"
@@ -114,3 +120,4 @@ public class G711 {
     }
 
 }
+

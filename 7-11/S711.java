@@ -48,10 +48,9 @@ public class S711 {
                     d = 711 - a - b - c;// a+b+c+d=g711
                     if (a * b * c * d == cents && a + b + c + d == s711 && d >= c) {
                         //print results in a certain format
-                        System.out.println("$" + df.format((double) s711 / 100) + " = $"
-                                + df.format((double) a / 100) + " + $"
-                                + df.format((double) b / 100) + " + $"
-                                + df.format((double) c / 100) + " + $"
+                        System.out.println("$"+df.format((double) a / 100) + " $"
+                                + df.format((double) b / 100) + " $"
+                                + df.format((double) c / 100) + " $"
                                 + df.format((double) d / 100));
                     }
                 }
