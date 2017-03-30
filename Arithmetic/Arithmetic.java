@@ -34,7 +34,7 @@ public class Arithmetic {
                 String[] line2 = sc.nextLine().split(" ");
                 wantedResult = Integer.parseInt(line2[0]);
                 order = line2[1];
-        LinkedList<String[]> operations = generateArithmetic(input.size() - 1);
+        LinkedList<String> operations = generateArithmetic(input.size() - 1);
                 if (order.equals("L") || order.equals("N")) {
                     calculate(input, order, operations,wantedResult);
                     if (results.isEmpty()) {
@@ -54,37 +54,16 @@ public class Arithmetic {
      * @param n the number of operations
      * @return a 2D array of operations
      */
-    public static LinkedList<String[]> generateArithmetic(int n) {
+    public static LinkedList<String> generateArithmetic(int n) {
         int possibilities = (int) (Math.pow(2.0, (double) n));
-        LinkedList<String[]> list = new LinkedList<>();
-        for (int i = 0; i < possibilities; i++) {
-            list.add(new String[n]);
-        }
-       
-        int numOfnForEachGroup;
-        int groups;
-        int flag = 0;
-        for (int j = 0; j < n; j++) {
-            int rowCount = 0;
-            // first row has 2^1 groups, second row has 2^2=4 groups
-            groups = (int) Math.pow(2.0, (double) j + 1);
-            // e.g if possibilities=8,then first row has 4"+" and 4"*"
-            // the second row has 4 gourps, ++ ** ++ **.
-            numOfnForEachGroup = possibilities / groups;
+        LinkedList<String> list = new LinkedList<>();      
+
+ 
             for (int i = 0; i < possibilities; i++) {
-                
-                if (rowCount != 0 && rowCount % numOfnForEachGroup == 0) {
-                    flag++;
-                }
-                if (flag % 2 == 0) {//this group is not finished yet
-                    list.get(i)[j] = "+";
-                    rowCount++;
-                } else {
-                    list.get(i)[j] = "*";
-                    rowCount++;
-                }
+            String f= "%"+n+"s";
+   list.add(String.format(f, Integer.toBinaryString(i)).replace(' ', '0'));
+               
             }
-        }
         return list;
     }
 
@@ -94,17 +73,19 @@ public class Arithmetic {
      * @param input the input list
      * @param order the calculate order
      * @param operations the set of operations
+     * @param wantedResult 
      * @return a list of results.
      */
     public static ArrayList<Integer> calculate(ArrayList<Integer> input,
-            String order, LinkedList<String[]> operations,int wantedResult) {
+            String order, LinkedList<String> operations,int wantedResult) {
 
         if (order.equals("L")) {
-            for (String[] a : operations) { //a one line of operations
+            for (String a : operations) { //a one line of operations
                 int result = input.get(0);
                 int i = 1;
-                for (String o : a) {//o the operation in the 
-                    if (o.equals("+")) {
+                String[] x = a.split("");
+                for (String o : x) {//o the operation in the 
+                    if (o.equals("0")) {
                         result += input.get(i);
                     } else {
                         result *= input.get(i);
@@ -118,7 +99,8 @@ public class Arithmetic {
                 }
             }
         } else {
-            for (String[] a : operations) { //a one line of operations
+            for (String x : operations) {
+                String[] a = x.split("");
                 int result = 0;
                 ArrayList<Integer> copy = new ArrayList<>();
                 for (int i : input) {
@@ -126,7 +108,7 @@ public class Arithmetic {
                 }
                 for (int i = 0; i < a.length; i++) {
 
-                    if (a[i].equals("*")) {
+                    if (a[i].equals("1")) {
                         copy.set(i + 1, copy.get(i) * copy.get(i + 1));
                         copy.set(i, 0);
                     }
@@ -136,6 +118,7 @@ public class Arithmetic {
                 }
                 if(result==wantedResult){
                     results.add(result);
+                    printOutput(order, wantedResult, input, x);
                     return results;     
                 }
                 copy.clear();
@@ -153,12 +136,16 @@ public class Arithmetic {
      * @param operations a set of operations.
      */
     public static void printOutput(String order, int wantedResult,
-            ArrayList<Integer> input, String[] operations) {
-        
+            ArrayList<Integer> input, String operations) {
+        String[] x = operations.split("");
             String result = order + " " + input.get(0);
             int i = 1;
-            for (String o : operations) {
-                result += " " + o + " " + input.get(i);
+            for (String o : x) {
+                if(o.equals("0")){
+                result += " + " + input.get(i);
+                }else{
+                    result += " * " + input.get(i);
+                }
                 i++;
             }
             System.out.println(result);
