@@ -27,9 +27,9 @@ public class G711 {
      * @param args The commend line inputs;
      */
     public static void main(String[] args) {
-        int count=0;
+        int count = 0;
         //final long startTime = System.currentTimeMillis();
-        for (int i = 100; i < 999; i++) { // for each number between 100-999. 
+        for (int i = 100; i < 1000; i++) { // for each number between 100-999. 
             g711 = i;
             countSolutions(); // count the solutions. 
         }
@@ -37,21 +37,22 @@ public class G711 {
 // for each index in the solutionCount list. 
             if (solutionCount[i] == 1) {
 // if it only has the unique solution.
-                g711 = i + 100; 
+                g711 = i + 100;
 // give its value to g711. 
-                printSolution(); 
+                printSolution();
 // call the print method to echo the result.
                 count++;
             }
         }
-        System.out.println(count+" solutions");
-        
+        System.out.println(count + " solutions");
+
     }
 
     /**
      * This method counts how many solutions a certain number has.
      */
     public static void countSolutions() {
+        //DecimalFormat df = new DecimalFormat("0.00"); // necessary fromating
         List<Integer> list = findDivs(); // find divisors.
         int size = list.size();
         for (int ai = 0; ai < size; ai++) { // try each divisor in the list
@@ -66,6 +67,12 @@ public class G711 {
                     if (d >= c) {
                         if (a * b * c * d == cents && a + b + c + d == g711) {
                             solutionCount[g711 - 100]++;
+//                             System.out.println("$" + 
+//                                    df.format((double) g711 / 100) + " = $"
+//                                    + df.format((double) a / 100) + " + $"
+//                                    + df.format((double) b / 100) + " + $"
+//                                    + df.format((double) c / 100) + " + $"
+//                                    + df.format((double) d / 100));
                         }
                     }
                 }
@@ -90,8 +97,8 @@ public class G711 {
                     if (d >= c) {
                         if (a * b * c * d == cents && a + b + c + d == g711) {
                             //print results in a certain format
-                            System.out.println("$" + 
-                                    df.format((double) g711 / 100) + " = $"
+                            System.out.println("$"
+                                    + df.format((double) g711 / 100) + " = $"
                                     + df.format((double) a / 100) + " + $"
                                     + df.format((double) b / 100) + " + $"
                                     + df.format((double) c / 100) + " + $"
@@ -120,4 +127,3 @@ public class G711 {
     }
 
 }
-
