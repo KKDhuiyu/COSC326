@@ -16,8 +16,8 @@ import java.util.*;
  */
 public class G711 {
 
-    private static int g711 = 711; // default value.
-    private static int cents = g711 * 1000000;// $ to cents.
+    private static int g711 ;  // default value.
+    private static int cents ;// $ to cents.
     private static int a, b, c, d; // four unknown integers(cause $ -> cents)
     private static int[] solutionCount = new int[900]; // 900 posiblities.
 
@@ -31,6 +31,7 @@ public class G711 {
         //final long startTime = System.currentTimeMillis();
         for (int i = 100; i < 1000; i++) { // for each number between 100-999. 
             g711 = i;
+            cents= g711 * 1000000;
             countSolutions(); // count the solutions. 
         }
         for (int i = 0; i < 900; i++) {
@@ -38,6 +39,7 @@ public class G711 {
             if (solutionCount[i] == 1) {
 // if it only has the unique solution.
                 g711 = i + 100;
+                cents= g711 * 1000000;
 // give its value to g711. 
                 printSolution();
 // call the print method to echo the result.
@@ -58,10 +60,10 @@ public class G711 {
         for (int ai = 0; ai < size; ai++) { // try each divisor in the list
             a = list.get(ai);
             // try each divisor whose index is bigger than a.
-            for (int bi = list.indexOf(list.get(ai)); bi < size; bi++) {
+            for (int bi = ai; bi < size; bi++) {
                 b = list.get(bi);
                 // try each divisor whose index is bigger than b.
-                for (int ci = list.indexOf(list.get(bi)); ci < size; ci++) {
+                for (int ci = bi; ci < size; ci++) {
                     c = list.get(ci);
                     d = g711 - a - b - c; // a+b+c+d=g711
                     if (d >= c) {
