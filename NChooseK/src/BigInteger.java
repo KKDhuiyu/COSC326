@@ -186,7 +186,7 @@ public class BigInteger {
         int remainder = 0;
         for (int i = 0; i < len; i++) {
             int temp1 = ((remainder * BASE_MAX) + digits1[i]) / divisor;
-            remainder = digits1[i] % divisor;
+            remainder = ((remainder * BASE_MAX) + digits1[i]) % divisor;
             result[i] = temp1;
         }
          
@@ -211,6 +211,31 @@ public class BigInteger {
             f.format("%03d", digits[i]); //e.g. format 9 as 000000009
         }
         return f.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 67 * hash + Arrays.hashCode(this.digits);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final BigInteger other = (BigInteger) obj;
+        if (!Arrays.equals(this.digits, other.digits)) {
+            return false;
+        }
+        return true;
     }
 
     /**
