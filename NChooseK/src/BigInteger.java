@@ -3,6 +3,8 @@ import java.util.Arrays;
 import java.util.Formatter;
 
 /**
+ * The support class that will handle big numbers. It can perform plus, multiply
+ * and divide functions.
  *
  * @author hjia
  */
@@ -10,7 +12,7 @@ public class BigInteger {
 
     private static final int BASE_MAX = 1000;//1,000
     private static final int BASE_LENGTH = 3;
-    private int[] digits;
+    private int[] digits; // place that hold the big integer. 
 
     public BigInteger(int... digits) { // 0 or more int will be passed
         this.digits = digits.clone();
@@ -170,31 +172,39 @@ public class BigInteger {
                 result = tempBig.getDigits();
             }
         }
-       
+
         while (result[0] == 0) {
-             if(result.length>1){
-            result = Arrays.copyOfRange(result, 1, result.length);
-        }
+            if (result.length > 1) {
+                result = Arrays.copyOfRange(result, 1, result.length);
+            }
         }
         this.digits = result;
     }
 
+    /**
+     * the big integer will be divided by an Integer.
+     *
+     * @param divisor
+     */
     public void divide(int divisor) {
         int[] digits1 = this.digits.clone();
         int len = digits1.length;
         int[] result = new int[len];//result array
-        int remainder = 0;
+        int remainder = 0; // the remainder that will be carried
         for (int i = 0; i < len; i++) {
             int temp1 = ((remainder * BASE_MAX) + digits1[i]) / divisor;
+            // the remainder will never be carried futher than 1 index.
             remainder = ((remainder * BASE_MAX) + digits1[i]) % divisor;
+            // each slot in result array will and only will have one 
+            // result in it. 
             result[i] = temp1;
         }
-         
-        while (result[0] == 0) {
-            if(result.length>1){
-            result = Arrays.copyOfRange(result, 1, result.length);
+
+        while (result[0] == 0) { // get ride of 0s 
+            if (result.length > 1) {
+                result = Arrays.copyOfRange(result, 1, result.length);
+            }
         }
-         }
         this.digits = result;
     }
 
