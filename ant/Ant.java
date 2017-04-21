@@ -6,12 +6,11 @@
  * step,  and the state of the ant’s current position—they may also
  * specify a change in that state.
  */
-package ant;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * This class will take inputs from STDIN as the ant's DNA. Then output the
@@ -31,6 +30,7 @@ public class Ant {
         bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         ArrayList<String> dnaList = new ArrayList<>();
         ArrayList<String> outputs = new ArrayList<>();
+       
         // the steps the ant will move
         int steps = 20;
 
@@ -65,7 +65,7 @@ public class Ant {
 
             }
             if (!dnaList.isEmpty()) {
-
+                
                 outputs.add(move(steps, dnaList));
                 dnaList.clear();
             }
@@ -88,14 +88,14 @@ public class Ant {
      * @param dnaList the ArrayList to store the ants DNA.
      */
     public static String move(int steps, ArrayList<String> dnaList) {
+         HashMap<String, String> map = new HashMap<>();  
         String result = "";
         //the first line of the DNA determines the default state
         String defaultState = dnaList.get(0).substring(0, 1);
         //this is actually the default direction the ant faces at (0,0).
         String lastMove = "N";
         Tile tile = new Tile(defaultState);
-        //  System.out.println(tile.toString()); //for testing purpose
-        boolean started = false;
+        map.put(tile.coordinator(),defaultState);
         for (int i = 0; i < steps; i++) {
 
             String dna = "";
@@ -115,23 +115,15 @@ public class Ant {
             } else {
                 String directions = dna.substring(2, 6);
                 String stateLeft = dna.substring(7, 11);
-                // System.out.println(directions);
                 // call method to determine the index of the next direction
                 int index = defineNextMove(lastMove, directions);
-
                 String nextMove = directions.charAt(index) + "";
-
                 String stateChange = stateLeft.charAt(index) + "";
-                //  System.out.println(index+"!!!!!"+ nextMove);
-                //    System.out.println(" Last move:"+lastMove);
                 lastMove = nextMove; // tracking the directions
-                // linked list implementation
-                if (started == false) {
-                    //result += printScenario(dnaList, tile);
-                }
+                
                 tile = new Tile(defaultState, tile);
-                started = true;
                 // chage the color when leaving
+                map.put(tile.getPrev().coordinator(),stateChange);
                 tile.getPrev().setColor(stateChange);
 
                 // System.out.println("heading: " + nextMove);
@@ -151,16 +143,8 @@ public class Ant {
                     default:
                         break;
                 }
-                // check if this coordinate has been visited before.
-                // if so, reset its state to what is used to be.
-                Tile previousTile = tile.getPrev();
-                while (previousTile != null) {
-                    if (tile.getX() == previousTile.getX()
-                            && tile.getY() == previousTile.getY()) {
-                        tile.setColor(previousTile.getColor());
-                        break;
-                    }
-                    previousTile = previousTile.getPrev();
+                if(map.containsKey(tile.coordinator())){
+                    tile.setColor(map.get(tile.coordinator()));
                 }
                 if (i == steps - 1) {
                     result += printScenario(dnaList, tile, steps);

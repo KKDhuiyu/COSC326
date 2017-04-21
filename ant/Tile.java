@@ -3,7 +3,6 @@
  * so that we can track back to the previous tiles to see if the coordinate 
  * has been visited before.
  */
-package ant;
 
 /**
  * This Class provides a data structure like a LinkedList that stores.
@@ -113,6 +112,9 @@ public class Tile {
      *
      * @return testing outputs.
      */
+    public String coordinator(){
+        return ""+this.x+", "+this.y;
+    }
     @Override
     public String toString() {
         // debug purpose
