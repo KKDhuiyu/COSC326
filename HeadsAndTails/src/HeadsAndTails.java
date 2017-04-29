@@ -37,8 +37,8 @@ public class HeadsAndTails {
             System.out.println("Steps: " + steps);
             return;
         }
-        while (!inOrder(total)) {
-            arrange();
+        while (!isInOrder(1,total)) {
+            arrange(heads,tails);
             steps++;
         }
         System.out.println("Steps: " + steps);
@@ -47,15 +47,32 @@ public class HeadsAndTails {
     /**
      * rearrange the coins.
      */
-    public static void arrange() {
-        for (int i = 1; i < total - 1; i++) {
-            // if see "H" followed by a "T" in a "not in order" list. do a swap
-            if (headsAndTails.get(i).equals("H")
-                    && headsAndTails.get(i + 1).equals("T") && !inOrder(i + 1)) {
-                headsAndTails.set(i, "T");
-                headsAndTails.set(i + 1, "H");
-                printArrayList();
-                return;
+    public static void arrange(int heads, int tails) {
+        if (heads >= tails) {
+            for (int i = 1; i < total - 1; i++) {
+                // if see "H" followed by a "T" in a "not in order" list. 
+                //do a swap
+                if (headsAndTails.get(i).equals("H")
+                        && headsAndTails.get(i + 1).equals("T") 
+                        && !isInOrder(0,i + 1)) {
+                    headsAndTails.set(i, "T");
+                    headsAndTails.set(i + 1, "H");
+                    printArrayList();
+                    return;
+                }
+            }
+        }else{
+            for (int i = total - 2; i >=1; i--) {
+                // if see "H" followed by a "T" in a "not in order" list. 
+                // do a swap
+                if (headsAndTails.get(i).equals("T")
+                        && headsAndTails.get(i - 1).equals("H") 
+                        && !isInOrder(i-1,total)) {
+                    headsAndTails.set(i, "H");
+                    headsAndTails.set(i - 1, "T");
+                    printArrayList();
+                    return;
+                }
             }
         }
     }
@@ -82,11 +99,11 @@ public class HeadsAndTails {
      * @param n the index of the list
      * @return a boolean that represents if its in order.
      */
-    public static boolean inOrder(int n) {
-        if (n < 2) {
-            return true;
+    public static boolean isInOrder(int start,int end) {
+        if(start==0){
+            start =1;
         }
-        for (int i = 1; i < n; i++) {
+        for (int i = start; i < end; i++) {
             // can be faster here
             if (headsAndTails.get(i).equals(headsAndTails.get(i - 1))) {
                 return false;

@@ -20,32 +20,41 @@ public class Arithmetic {
      */
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        while (true) {
-            while (sc.hasNextLine()) {
-                ArrayList<Integer> input = new ArrayList<>();
-                String order;
-                results = new ArrayList<>();
-                int wantedResult;
 
-                String line = sc.nextLine();
-                for (String a : line.split(" ")) {
-                    input.add(Integer.valueOf(a));
+        while (sc.hasNextLine()) {
+            ArrayList<Integer> input = new ArrayList<>();
+            String order;
+            results = new ArrayList<>();
+            int wantedResult;
+
+            String line = sc.nextLine();
+            for (String a : line.split(" ")) {
+                input.add(Integer.valueOf(a));
+            }
+            String[] line2 = sc.nextLine().split(" ");
+            wantedResult = Integer.parseInt(line2[0]);
+            order = line2[1];
+            if (input.size() == 1) {
+                if (input.get(0) == wantedResult) {
+                    System.out.println(order + " " + wantedResult);
+                } else {
+                    System.out.println(order + " impossible");
                 }
-                String[] line2 = sc.nextLine().split(" ");
-                wantedResult = Integer.parseInt(line2[0]);
-                order = line2[1];
-        LinkedList<String> operations = generateArithmetic(input.size() - 1);
+            } else {
+                LinkedList<String> operations = 
+                        generateArithmetic(input.size() - 1);
                 if (order.equals("L") || order.equals("N")) {
-                    calculate(input, order, operations,wantedResult);
+                    calculate(input, order, operations, wantedResult);
                     if (results.isEmpty()) {
-            System.out.println(order + " impossible");
-           
-        }
+                        System.out.println(order + " impossible");
+
+                    }
                 } else {
                     System.err.println("invalid order");
                 }
             }
         }
+
     }
 
     /**
@@ -56,14 +65,14 @@ public class Arithmetic {
      */
     public static LinkedList<String> generateArithmetic(int n) {
         int possibilities = (int) (Math.pow(2.0, (double) n));
-        LinkedList<String> list = new LinkedList<>();      
-
- 
-            for (int i = 0; i < possibilities; i++) {
-            String f= "%"+n+"s";
-   list.add(String.format(f, Integer.toBinaryString(i)).replace(' ', '0'));
-               
+        LinkedList<String> list = new LinkedList<>();
+        for (int i = 0; i < possibilities; i++) {
+            String temp = Integer.toBinaryString(i);
+            for (int j = temp.length(); j < n; j++) {
+                temp = "0" + temp;
             }
+            list.add(temp);
+        }
         return list;
     }
 
@@ -73,11 +82,11 @@ public class Arithmetic {
      * @param input the input list
      * @param order the calculate order
      * @param operations the set of operations
-     * @param wantedResult 
+     * @param wantedResult
      * @return a list of results.
      */
     public static ArrayList<Integer> calculate(ArrayList<Integer> input,
-            String order, LinkedList<String> operations,int wantedResult) {
+            String order, LinkedList<String> operations, int wantedResult) {
 
         if (order.equals("L")) {
             for (String a : operations) { //a one line of operations
@@ -92,10 +101,10 @@ public class Arithmetic {
                     }
                     i++;
                 }
-                if(result==wantedResult){
+                if (result == wantedResult) {
                     results.add(result);
-                     printOutput(order, wantedResult, input, a);
-                    return results;     
+                    printOutput(order, wantedResult, input, a);
+                    return results;
                 }
             }
         } else {
@@ -116,10 +125,10 @@ public class Arithmetic {
                 for (int n : copy) {
                     result += n;
                 }
-                if(result==wantedResult){
+                if (result == wantedResult) {
                     results.add(result);
                     printOutput(order, wantedResult, input, x);
-                    return results;     
+                    return results;
                 }
                 copy.clear();
             }
@@ -138,18 +147,18 @@ public class Arithmetic {
     public static void printOutput(String order, int wantedResult,
             ArrayList<Integer> input, String operations) {
         String[] x = operations.split("");
-            String result = order + " " + input.get(0);
-            int i = 1;
-            for (String o : x) {
-                if(o.equals("0")){
+        String result = order + " " + input.get(0);
+        int i = 1;
+        for (String o : x) {
+            if (o.equals("0")) {
                 result += " + " + input.get(i);
-                }else{
-                    result += " * " + input.get(i);
-                }
-                i++;
+            } else {
+                result += " * " + input.get(i);
             }
-            System.out.println(result);
-        
+            i++;
+        }
+        System.out.println(result);
+
     }
 
 }
