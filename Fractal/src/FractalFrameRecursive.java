@@ -3,13 +3,13 @@ import javax.swing.*;
 import java.awt.*;
 
 
-public class FractalFrame extends JFrame {
+public class FractalFrameRecursive extends JFrame {
 
     private final JPanel panel;
-    private final int x = 150; // width
-    private static int n = 6; // command line args
+    private final int x = 250; // width
+    private static int n = 3; // command line args
  public static void main(String[] args) {
-        FractalFrame frame = new FractalFrame();
+        FractalFrameRecursive frame = new FractalFrameRecursive();
         
         try {
             n = Integer.parseInt(args[0]);
@@ -18,9 +18,9 @@ public class FractalFrame extends JFrame {
         frame.setTitle(n + " Fractal");
         frame.setVisible(true);
     }
-    public FractalFrame() {
+    public FractalFrameRecursive() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(900, 900);
+        setSize(750, 800);
 
         panel = new JPanel();
         panel.setBackground(Color.BLUE);
@@ -35,14 +35,14 @@ public class FractalFrame extends JFrame {
         g.setColor(Color.WHITE); // draw in white
         int w = (getWidth() / 2) - (x / 2);
         int h = (getHeight() / 2) - (x / 2);
-        int count = 0;
+        int count = 1;
         g.fillRect(w, h, x, x);
         if (n > 0) {
             draw(g, w, h, x, count);
         }
     }
 
-    private void draw(Graphics g, int w, int h, int size, int n) {
+    private void draw (Graphics g, int w, int h, int size, int n) {
 
         if (n == this.n) {
             return;
