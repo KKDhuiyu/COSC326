@@ -7,7 +7,13 @@ public class FractalFrameIterative extends JFrame {
 
     private final JPanel panel;
     private final int x = 243; // width
-    private static int n = 4; // command line args
+    private static int n = 2; // command line args
+    private static ArrayList<Integer> widths = new ArrayList<>();
+    private static ArrayList<Integer> heights = new ArrayList<>();
+    private static ArrayList<Integer> sizes = new ArrayList<>();
+    private static ArrayList<Integer> widths2 = new ArrayList<>();
+    private static ArrayList<Integer> heights2 = new ArrayList<>();
+    private static ArrayList<Integer> sizes2 = new ArrayList<>();
 
     public static void main(String[] args) {
         FractalFrameIterative frame = new FractalFrameIterative();
@@ -17,7 +23,6 @@ public class FractalFrameIterative extends JFrame {
         } catch (ArrayIndexOutOfBoundsException e) {
         }
         frame.setTitle(n + " Fractal");
-        n = n - 1;
         frame.setVisible(true);
     }
 
@@ -29,7 +34,10 @@ public class FractalFrameIterative extends JFrame {
         getContentPane().add(panel);
 
     }
-
+/**
+ * this method will be called 3 times for some unknown reasons.
+ * @param g 
+ */
     @Override
     public void paint(Graphics g) {
         // When it repaints, things drawn before are cleared.
@@ -37,192 +45,94 @@ public class FractalFrameIterative extends JFrame {
         g.setColor(Color.WHITE); // draw in white
         int w = (getWidth() / 2) - (x / 2);
         int h = (getHeight() / 2) - (x / 2);
+        int nFractal = n;
         g.fillRect(w, h, x, x);
-        drawTop(g, w, h, x);
-        //drawTopLeft(g, w, h, x);
-//drawBot(g, w, h, x);
+        while (nFractal > 0) {
+            widths.clear();
+            heights.clear();
+            sizes.clear();
+            for (int i = 0; i < widths2.size(); i++) {
+                widths.add(widths2.get(i));
+                heights.add(heights2.get(i));
+                sizes.add(sizes2.get(i));
+            }
+            widths2.clear();
+            heights2.clear();
+            sizes2.clear(); // prevent infinent loop. 
+            if (widths.isEmpty()) { // when draw the first 8 surroundings
+                drawPoints(g, w, h, x);
+                addPoints(w, h, x);
+            } else {
+                for (int i = 0; i < widths.size(); i++) {
+                    addPoints(widths.get(i), heights.get(i), sizes.get(i));
+                    drawPoints(g, widths.get(i), heights.get(i), sizes.get(i));
+                }
+            }
+            nFractal--;
+        }
+        widths.clear();
+        heights.clear();
+        sizes.clear();
+        widths2.clear();
+        heights2.clear();
+        sizes2.clear();
+    }
+/**
+ * Add the coordinators of the 8 surrounding squares to the list.
+ * @param w
+ * @param h
+ * @param size 
+ */
+    private void addPoints(int w, int h, int size) {
+
+        widths2.add(w + (size / 3));
+        heights2.add(h - (2 * size / 3));
+        sizes2.add(size / 3);
+        widths2.add(w - (2 * size / 3));
+        heights2.add(h - (2 * size / 3));
+        sizes2.add(size / 3);
+        widths2.add(w + (4 * size / 3));
+        heights2.add(h - (2 * size / 3));
+        sizes2.add(size / 3);
+        widths2.add(w - (2 * size / 3));
+        heights2.add(h + (size / 3));
+        sizes2.add(size / 3);
+        widths2.add(w + size + (size / 3));
+        heights2.add(h + (size / 3));
+        sizes2.add(size / 3);
+        widths2.add(w + (size / 3));
+        heights2.add(h + (4 * size / 3));
+        sizes2.add(size / 3);
+        widths2.add(w - (2 * size / 3));
+        heights2.add(h + (4 * size / 3));
+        sizes2.add(size / 3);
+        widths2.add(w + size + (size / 3));
+        heights2.add(h + (4 * size / 3));
+        sizes2.add(size / 3);
+
     }
 
-    private void drawTop(Graphics g, int wi, int he, int size) {
-        ArrayList<Integer> widths = new ArrayList<>();
-        ArrayList<Integer> heights = new ArrayList<>();
-        ArrayList<Integer> sizes = new ArrayList<>();
-         int si = size;
-        int width = wi+ si / 3;
-        int height = he- 2 * si / 3;
-        int width2 = wi+ si / 3;
-        int height2 = he- 2 * si / 3;
-            si = si / 3;
-            widths.add(width);
-            heights.add(height);
-            sizes.add(si);
-        for (int i = n; i > 0; i--) {
-            width = width + si / 3;
-            height = height - 2 * si / 3;
-            
-            widths.add(width);
-            heights.add(height);
-            
-            
-            width2 = width2- 2 * si / 3;
-            height2 = height2 - 2 * si / 3;
-            widths.add(width2);
-            heights.add(height2);
-            si = si / 3;
-            sizes.add(si);
-            sizes.add(si);
-        }
-
-        for (int i = 0; i < widths.size(); i++) {
-            int w = widths.get(i);
-            int h = heights.get(i);
-            int s = sizes.get(i);
-            g.fillRect(w, h, s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h, s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h, s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h + s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h + s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w, h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-
-        }
-    }
-     private void drawBot(Graphics g, int wi, int he, int size) {
-        ArrayList<Integer> widths = new ArrayList<>();
-        ArrayList<Integer> heights = new ArrayList<>();
-        ArrayList<Integer> sizes = new ArrayList<>();
-        int width = wi;
-        int height = he;
-        int si = size;
-        width = width + si / 3;
-            height = height - 2 * si / 3;
-            si = si / 3;
-            widths.add(width);
-            heights.add(height);
-            sizes.add(si);
-        for (int i = n; i > 1; i--) {
-            width = width- 2 * si / 3;
-            height = height - 2 * si / 3;
-            si = si / 3;
-            widths.add(width);
-            heights.add(height);
-            sizes.add(si);
-        }
-
-        for (int i = 0; i < widths.size(); i++) {
-            int w = widths.get(i);
-            int h = heights.get(i);
-            int s = sizes.get(i);
-            g.fillRect(w, h, s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h, s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h, s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h + s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h + s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w, h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-
-        }
-    }
-
-    private void drawTopLeft(Graphics g, int wi, int he, int size) {
-        ArrayList<Integer> widths = new ArrayList<>();
-        ArrayList<Integer> heights = new ArrayList<>();
-        ArrayList<Integer> sizes = new ArrayList<>();
-        wi = wi + size / 3;
-        he = he - 2 * size / 3;
-        size = size / 3;
-        for (int i = n; i > 1; i--) {
-            wi = wi + size / 3;
-            he = he - 2 * size / 3;
-            size = size / 3;
-            widths.add(wi);
-            heights.add(he);
-            sizes.add(size);
-        }
-        for (int i = 0; i < widths.size(); i++) {
-            int w = widths.get(i);
-            int h = heights.get(i);
-            int s = sizes.get(i);
-            g.fillRect(w, h, s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h, s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h, s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h + s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h + s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w, h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w - s * ((int) Math.pow(3, i + 1)), h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-            g.fillRect(w + s * ((int) Math.pow(3, i + 1)), h + 2 * s * ((int) Math.pow(3, i + 1)), s, s);
-        }
-    }
-//private void drawTopLeft(Graphics g, int wi, int he, int size) {
-//   ArrayList<Integer> widths = new ArrayList<>();
-//   ArrayList<Integer> heights = new ArrayList<>();
-//   ArrayList<Integer> sizes = new ArrayList<>();
-//   for (int i = n; i > 0; i--) {
-//       he = he - (2 * size / 3);
-//       wi = wi - 2 * size / 3;
-//       size = size / 3;
-//       widths.add(wi);
-//       heights.add(he);
-//       sizes.add(size);
-//   }
-//   for (int i = 0; i < widths.size(); i++) {
-//       int w=widths.get(i);
-//       int h=heights.get(i);
-//       int s =sizes.get(i);
-//       g.fillRect(w,h,s,s);
-//       
-//       g.fillRect(w, h+ s*((int)Math.pow(3, i+1)), s,s);
-//       g.fillRect(w, h+ 2*s*((int)Math.pow(3, i+1)), s,s);
-//       
-//       g.fillRect(w + s*((int)Math.pow(3, i+1)), h, s,s);
-//       g.fillRect(w + s*((int)Math.pow(3, i+1)), h+ 2*s*((int)Math.pow(3, i+1)), s,s); 
-//       
-//       g.fillRect(w + 2*s*((int)Math.pow(3, i+1)), h, s,s);
-//       g.fillRect(w + 2*s*((int)Math.pow(3, i+1)), h+ s*((int)Math.pow(3, i+1)), s,s); 
-//       g.fillRect(w + 2*s*((int)Math.pow(3, i+1)), h+ 2*s*((int)Math.pow(3, i+1)), s,s); 
-//      
-//      
-//   }
-//}
-
-    private void draw(Graphics g, int w, int h, int size) {
-        int s = size;
-        int width = w;
-        int hight = h;
-
-        for (int j = n; j > 0; j--) {
-            g.fillRect(w + (size / 3), h - (2 * size / 3), size / 3, size / 3);
-            g.fillRect(w - (2 * size / 3), h - (2 * size / 3), size / 3, size / 3);
-            g.fillRect(w + (4 * size / 3), h - (2 * size / 3), size / 3, size / 3);
-            g.fillRect(w - (2 * size / 3), h + (size / 3), size / 3, size / 3);
-            g.fillRect(w + size + (size / 3), h + (size / 3), size / 3, size / 3);
-            g.fillRect(w + (size / 3), h + (4 * size / 3), size / 3, size / 3);
-            g.fillRect(w - (2 * size / 3), h + (4 * size / 3), size / 3, size / 3);
-            g.fillRect(w + size + (size / 3), h + (4 * size / 3), size / 3, size / 3);
-
-            h = h - 2 * size / 3;
-            w = w + size / 3;
-            size = size / 3;
-        }
-        size = s;
-        w = width;
-        h = hight;
-        for (int k = n; k > 0; k--) {
-            g.fillRect(w + (size / 3), h - (2 * size / 3), size / 3, size / 3);
-            g.fillRect(w - (2 * size / 3), h - (2 * size / 3), size / 3, size / 3);
-            g.fillRect(w + (4 * size / 3), h - (2 * size / 3), size / 3, size / 3);
-            g.fillRect(w - (2 * size / 3), h + (size / 3), size / 3, size / 3);
-            g.fillRect(w + size + (size / 3), h + (size / 3), size / 3, size / 3);
-            g.fillRect(w + (size / 3), h + (4 * size / 3), size / 3, size / 3);
-            g.fillRect(w - (2 * size / 3), h + (4 * size / 3), size / 3, size / 3);
-            g.fillRect(w + size + (size / 3), h + (4 * size / 3), size / 3, size / 3);
-
-            h = h - (2 * size / 3);
-            w = w - 2 * size / 3;
-            size = size / 3;
-        }
+    /**
+     * draw a square and 8 surrounding according to width height and size of the
+     * middle square.
+     *
+     * @param g graph
+     * @param w width
+     * @param h height
+     * @param size size of the middle square.
+     */
+    private void drawPoints(Graphics g, int w, int h, int size) {
+        g.fillRect(w, h, size, size);
+        g.fillRect(w + (size / 3), h - (2 * size / 3), size / 3, size / 3);
+        g.fillRect(w - (2 * size / 3), h - (2 * size / 3), size / 3, size / 3);
+        g.fillRect(w + (4 * size / 3), h - (2 * size / 3), size / 3, size / 3);
+        g.fillRect(w - (2 * size / 3), h + (size / 3), size / 3, size / 3);
+        g.fillRect(w + size + (size / 3), h + (size / 3), size / 3, size / 3);
+        g.fillRect(w + (size / 3), h + (4 * size / 3), size / 3, size / 3);
+        g.fillRect(w - (2 * size / 3), h + (4 * size / 3), size / 3, size / 3);
+        g.fillRect(w + size + (size / 3),
+                h + (4 * size / 3), size / 3, size / 3);
 
     }
+
 }
