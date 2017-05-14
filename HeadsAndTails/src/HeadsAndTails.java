@@ -8,8 +8,8 @@ import java.util.Scanner;
  */
 public class HeadsAndTails {
 
-    private static int heads = 5;
-    private static int tails = 5;
+    private static int heads = 4;
+    private static int tails = 4;
     private static int total;
     private static ArrayList<String> headsAndTails;
 
@@ -19,11 +19,11 @@ public class HeadsAndTails {
     public static void main(String[] args) {
         int steps = 0;
 
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Number of heads: ");
-        heads = sc.nextInt();
-        System.out.print("Number of tails: ");
-        tails = sc.nextInt();
+//        Scanner sc = new Scanner(System.in);
+//        System.out.print("Number of heads: ");
+//        heads = sc.nextInt();
+//        System.out.print("Number of tails: ");
+//        tails = sc.nextInt();
         total = heads + tails;
         // if it can't be balanced.
         if (heads - tails > 1 || heads - tails < -1) {
@@ -37,10 +37,18 @@ public class HeadsAndTails {
             System.out.println("Steps: " + steps);
             return;
         }
-        while (!isInOrder(1,total)) {
+        //while (!isInOrder(1,total)) {
             arrange(heads,tails);
             steps++;
-        }
+            arrange(heads,tails);
+            printArrayList();
+            steps++;
+            arrange(heads,tails);
+            printArrayList();
+            arrange(heads,tails);
+            printArrayList();
+            steps++;
+        //}
         System.out.println("Steps: " + steps);
     }
 
@@ -48,35 +56,77 @@ public class HeadsAndTails {
      * rearrange the coins.
      */
     public static void arrange(int heads, int tails) {
-        if (heads >= tails) {
-            for (int i = 1; i < total - 1; i++) {
-                // if see "H" followed by a "T" in a "not in order" list. 
-                //do a swap
-                if (headsAndTails.get(i).equals("H")
-                        && headsAndTails.get(i + 1).equals("T") 
-                        && !isInOrder(0,i + 1)) {
-                    headsAndTails.set(i, "T");
-                    headsAndTails.set(i + 1, "H");
-                    printArrayList();
-                    return;
+       
+            if(headsAndTails.get(1).equals("H")&&headsAndTails.get(2).equals("H")){
+                headsAndTails.add("H");headsAndTails.add("H");
+                headsAndTails.set(1, "_");headsAndTails.set(2, "_");
+                 printArrayList();
+            } else {
+                int startIndex = total / 2 - 1;
+                int index = indexOfThreeTs(startIndex);
+                int space = headsAndTails.indexOf("_");
+                if(space==total-1){
+                     headsAndTails.set(space,headsAndTails.get(0) );
+                        headsAndTails.set(space+1, headsAndTails.get(1));
+                        headsAndTails.set(0,"_");
+                         headsAndTails.set(1,"_");
                 }
-            }
-        }else{
-            for (int i = total - 2; i >=1; i--) {
-                // if see "H" followed by a "T" in a "not in order" list. 
-                // do a swap
-                if (headsAndTails.get(i).equals("T")
-                        && headsAndTails.get(i - 1).equals("H") 
-                        && !isInOrder(i-1,total)) {
-                    headsAndTails.set(i, "H");
-                    headsAndTails.set(i - 1, "T");
-                    printArrayList();
-                    return;
-                }
-            }
-        }
-    }
+                if (index == -1) {
+                    String temp;
+                    
+                    if (space % 2 == 0) {
+                        temp = "TH";
+                        for (int i = space;i<total;i++) {
+                            if (headsAndTails.get(i).equals("T") && (i+1) % 2 == 0
+                                    && headsAndTails.get(i+1).equals("H")&& (i)% 2 != 0) {
+                                headsAndTails.set(space, "T");
+                                headsAndTails.set(space+1, "H");
+                                headsAndTails.set(i, "_");
+                                headsAndTails.set(i+1, "_");
+                            }
+                        }
+                    } else {
+                        temp = "HT";
+                        for (int i = space;i<total;i++) {
+                            if (headsAndTails.get(i).equals("H") && (i) % 2 == 0
+                                    && headsAndTails.get(i+1).equals("T")&& (i+1)% 2 != 0) {
+                                headsAndTails.set(space, "H");
+                                headsAndTails.set(space+1, "T");
+                                headsAndTails.set(i, "_");
+                                headsAndTails.set(i+1, "_");
+                            }
+                        }
+                    }
 
+               }else{
+                    if(space<total/2){
+                        headsAndTails.set(space, "T");
+                        headsAndTails.set(space+1, "T");
+                        headsAndTails.set(index, "_");
+                        headsAndTails.set(index+1, "_");
+                    }
+                }
+            }
+        
+    }
+public static int indexOfThreeTs(int startIndex){
+     for(int i=startIndex;i<total;i++){
+         if(headsAndTails.get(i).equals("T")&&headsAndTails.get(i+1).equals("T")&&
+                 headsAndTails.get(i+2).equals("T")){
+             return i;
+         }
+     }
+     return -1;
+}
+public static int indexOfReversedHT(){
+     for(int i=total+2;i>=1;i--){
+         if(headsAndTails.get(i).equals("T")&&i%2==0&&
+                 headsAndTails.get(i+2).equals("T")){
+             return i;
+         }
+     }
+     return -1;
+}
     /**
      * initialize and print the array list based on the sum of the heads and
      * tails.
@@ -115,7 +165,7 @@ public class HeadsAndTails {
     public static void printArrayList() {
         String result = "";
         for (String s : headsAndTails) {
-            result += s;
+            result += s+" ";
         }
         System.out.println(result);
     }

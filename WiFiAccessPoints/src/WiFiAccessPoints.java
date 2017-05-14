@@ -15,7 +15,7 @@ public class WiFiAccessPoints {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String fileName = "TrickyAccessPoints1.txt";
+        String fileName = "EastAccessPoints.txt";
         String line;
         boolean isAccessPointsFile = false;
         int lineCount = 0;
@@ -41,9 +41,9 @@ public class WiFiAccessPoints {
             System.out.println("file not found");
         } catch (IOException e) {
         }
-        System.out.println(east.toString());
-        System.out.println(north.toString());
-        System.out.println(findMin(east,north));
+
+        System.out.println("The maximum diameter of the circle "
+                + "should be less than "+findMin(east,north));
     }
 
     public void exceptionHandler(ArrayList<Double> e, ArrayList<Double> n) {
