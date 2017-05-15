@@ -43,14 +43,12 @@ public class PeanutsAndPretzels {
                     System.out.println(s);
                     break;
                 }
-               
+                //System.out.println(s+ ".......");
             }
             if(!hasFreeDrink){
                 System.out.println("0 0");
             }
         }
-         System.out.println(true^false);
-                System.out.println(true^true);
     }
     /**
      *  This is a recursive method that use && to confirm there are no lose
@@ -69,9 +67,6 @@ public class PeanutsAndPretzels {
          String move = firstMove;
          pean -= Integer.parseInt(move.split(" ")[0]);
          pret -= Integer.parseInt(move.split(" ")[1]);
-         if(pean<0 || pret <0){
-             return false;
-         }
          boolean nextTurn= !isMyTurn; 
          boolean win=true;
          ArrayList<String> validRules = new ArrayList<>();
@@ -82,12 +77,22 @@ public class PeanutsAndPretzels {
          }
          // 5 conditions to handle exceptions 
          // so that the program will not waste time on rules 0,1 and 1,0. 
-         if((validRules.size()==2 && validRules.contains("0 1")&& 
+         if(validRules.size()==2 && validRules.contains("0 1")&& 
+                 validRules.contains("1 0")&& !isMyTurn && (pean+pret)%2==0){
+             return false;
+         }else if(validRules.size()==1 && (validRules.contains("0 1")|| 
+                 validRules.contains("1 0"))&& !isMyTurn && (pean+pret)%2==0){
+             return false;
+         }else if(validRules.size()==2 && validRules.contains("0 1")&& 
+                 validRules.contains("1 0")&& isMyTurn && (pean+pret)%2!=0){
+             return false;
+         }else if(validRules.size()==1 && (validRules.contains("0 1")|| 
+                 validRules.contains("1 0"))&& isMyTurn && (pean+pret)%2!=0){
+             return false;
+         }else if((validRules.size()==2 && validRules.contains("0 1")&& 
                  validRules.contains("1 0"))||(validRules.size()==1 && (validRules.contains("0 1")|| 
                  validRules.contains("1 0")))){
-             boolean isEven = (pean+pret)%2==0;
-            
-             return     isEven^!isMyTurn;
+             return true;
          }
         
         // if the bowl is empty and the next turn is my turn
