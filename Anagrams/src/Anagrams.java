@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Scanner;
 
 /*
@@ -15,7 +13,7 @@ import java.util.Scanner;
  */
 /**
  *
- * @author hjia
+ * @author Huiyu Jia. Jason Zhao.
  */
 public class Anagrams {
 
@@ -24,7 +22,6 @@ public class Anagrams {
     /**
      * @param args the command line arguments
      */
-
     public static void main(String[] args) {
         HashMap<Integer, ArrayList<String>> dictionary;
 
@@ -78,39 +75,34 @@ public class Anagrams {
                 ArrayList<String> temp2 = dictionary.get(i);
                 for (String s : temp2) {
                     String word = s;
-                    findAllCombination(maxWords - 1, inputStringLength, dictionary, word, input);
+                    findAllCombination(maxWords - 1, 
+                            inputStringLength, dictionary, word, input);
                 }
             }
         }
 
         ArrayList<String[]> result = new ArrayList<>();
         ArrayList<String> result2 = new ArrayList<>();
+
         for (String s : combination) {
             if (isAnagrams(s1, s)
-                    && !s.equals(input.toLowerCase().replaceAll("[^a-z\\s]", ""))) {
-                result.add(s.split(" "));
-                result2.add(s);
-
-            }
-        }
-        for (int i = 1; i <= maxWords; i++) {
-
-            for (int j = 0; j < result.size() - 2; j++) {
-                if (result.get(j).length == i) {
-                    for (int k = j + 1; k < result.size() - 1; k++) {
-                        if (result.get(k).length == i) {
-                            if (compareArrays(result.get(j), result.get(j + 1))) {
-                                result.remove(k);
-                                result2.remove(k);
-                                j -= 1;
-                            }
-                        }
+                    && !s.equals(input.toLowerCase().
+                            replaceAll("[^a-z\\s]", ""))) {
+                boolean flag = true;
+                for (String[] sa : result) {
+                    if (compareArrays(sa, s.split(" "))) {
+                        flag = false;
                     }
-
                 }
+                if (flag) {
+                    result.add(s.split(" "));
+                    result2.add(s);
+                }
+
             }
         }
-        for (int i = 1; i <= maxWords; i++) {
+
+        for (int i = 1; i <= maxWords; i++) {//print in order
             for (String ss : result2) {
                 if (ss.split(" ").length == i) {
                     System.out.println(ss);
@@ -120,11 +112,23 @@ public class Anagrams {
         }
 
     }
-
-    public static boolean compareArrays(String[] arr1, String[] arr2) {
-        HashSet<String> set1 = new HashSet<>(Arrays.asList(arr1));
-        HashSet<String> set2 = new HashSet<>(Arrays.asList(arr2));
-        return set1.equals(set2);
+/**
+ * return true if a equals b. 
+ * @param a
+ * @param b
+ * @return 
+ */
+    public static boolean compareArrays(String[] a, String[] b) {
+        if (a.length != b.length) {
+            return false;
+        }
+        for (int i = 0; i < a.length; i++) {
+            int x = Arrays.asList(b).indexOf(a[i]);
+            if (x == -1) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static String sortCharInString(String s) {
@@ -159,11 +163,13 @@ public class Anagrams {
     }
 
     public static void findAllCombination(int maxWords,
-            int len, HashMap<Integer, ArrayList<String>> map, String startWords, String input) {
+            int len, HashMap<Integer, ArrayList<String>> map,
+            String startWords, String input) {
         int startWordsLength = startWords.replaceAll("[^a-z]", "").length();
         if (startWordsLength == len) {
             if (isAnagrams(input, startWords)
-                    && !startWords.equals(input.toLowerCase().replaceAll("[^a-z\\s]", ""))) {
+                    && !startWords.equals(
+                            input.toLowerCase().replaceAll("[^a-z\\s]", ""))) {
                 //System.out.println(startWords);
             }
             combination.add(startWords);
@@ -177,7 +183,8 @@ public class Anagrams {
             return;
         }
         int lastWordLength
-                = startWords.split(" ")[startWords.split(" ").length - 1].length();
+                = startWords.split(" ")[startWords.split(" ").length - 1].
+                        length();
         for (int i = lastWordLength; i > 0; i--) {
             if (map.containsKey(i)) {
                 ArrayList<String> temp2 = (ArrayList<String>) map.get(i);

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author hjia
+ * @author Huiyu Jia, Jason Zhao, Celine Ahkit, Sam Grant
  */
 public class WiFiAccessPoints {
 
