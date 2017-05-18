@@ -83,26 +83,32 @@ public class Anagrams {
 
         ArrayList<String[]> result = new ArrayList<>();
         ArrayList<String> result2 = new ArrayList<>();
-
-        for (String s : combination) {
+       
+        for (String s : combination) {//remove duplicates 
             if (isAnagrams(s1, s)
                     && !s.equals(input.toLowerCase().
                             replaceAll("[^a-z\\s]", ""))) {
                 boolean flag = true;
                 for (String[] sa : result) {
-                    if (compareArrays(sa, s.split(" "))) {
+                    if (compareArrays(sa, s.split(" ")) ||
+                            compareArrays(input.toLowerCase().
+                            replaceAll("[^a-z\\s]", "").split(" "),
+                                    s.split(" "))) {
                         flag = false;
                     }
                 }
                 if (flag) {
-                    result.add(s.split(" "));
+                   result.add(s.split(" "));
                     result2.add(s);
                 }
 
             }
         }
-
-        for (int i = 1; i <= maxWords; i++) {//print in order
+        boolean inOrder= sortResult(result2,maxWords);
+        while(!inOrder){//sort 
+            inOrder= sortResult(result2,maxWords);
+        }
+        for (int i = 1; i <=maxWords; i++) {//print in order
             for (String ss : result2) {
                 if (ss.split(" ").length == i) {
                     System.out.println(ss);
@@ -112,6 +118,40 @@ public class Anagrams {
         }
 
     }
+    /**
+     * sort the result array
+     * @param result
+     * @param maxwords
+     * @return if its in order
+     */
+    public static boolean sortResult(ArrayList<String> result, int maxwords){
+        boolean flag=true;
+         ArrayList<String[]> resultArray = new ArrayList<>();
+         for(String s: result){
+             resultArray.add(s.split(" "));
+         }
+        for(int i=1;i<=maxwords;i++){
+            for(int j=0;j<resultArray.size()-1;j++){
+                if(resultArray.get(j).length-1>i){
+                    if(resultArray.get(j)[i-1].length()==
+                            resultArray.get(j+1)[i-1].length() 
+                            &&resultArray.get(j)[i].length()<
+                            resultArray.get(j+1)[i].length()){
+                        String[] temp= resultArray.get(j);
+                        resultArray.set(j, resultArray.get(j+1));
+                        resultArray.set(j+1, temp);//swap;
+                        String tempS= result.get(j);
+                        result.set(j, result.get(j+1));
+                        result.set(j+1, tempS);
+                        flag=false;
+                    }
+                }
+            }
+        }
+        return flag;
+    }
+    
+   
 /**
  * return true if a equals b. 
  * @param a
