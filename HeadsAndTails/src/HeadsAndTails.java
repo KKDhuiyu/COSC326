@@ -4,132 +4,202 @@ import java.util.Scanner;
 
 /**
  *
- * @author hjia
+ * @author Huiyu Jia, Jason Zhao.
  */
 public class HeadsAndTails {
 
+    private static ArrayList<String> headsAndTails;
     private static int heads = 4;
     private static int tails = 4;
-    private static int total;
-    private static ArrayList<String> headsAndTails;
+    private static int total = 0;
+    public static ArrayList<ArrayList<String>> tree = new ArrayList<>();
+    public static String solutionString = "";
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        int steps = 0;
+        Scanner sc = new Scanner(System.in);
+        while (sc.hasNextLine()) {
+            ArrayList<String> coins = new ArrayList<>();
 
-//        Scanner sc = new Scanner(System.in);
-//        System.out.print("Number of heads: ");
-//        heads = sc.nextInt();
-//        System.out.print("Number of tails: ");
-//        tails = sc.nextInt();
-        total = heads + tails;
-        // if it can't be balanced.
-        if (heads - tails > 1 || heads - tails < -1) {
-            System.out.println("impossible");
-            return;
-        }
+            int numLetters;
+            String coinSide;
+            ArrayList<String> coinS = new ArrayList<>();
 
-        // create an arraylist depending on the sum of heads and tails
-        initArrayList();
-        if (total == 2) { // if it's HT
-            System.out.println("Steps: " + steps);
-            return;
+            System.out.print("Number of heads: ");
+            heads = sc.nextInt();
+            System.out.print("Number of tails: ");
+            tails = sc.nextInt();
+            total = heads + tails;
+            // if it can't be balanced.
+            if (heads - tails > 1 || heads - tails < -1) {
+                System.out.println("impossible");
+                return;
+            }
+            initArrayList();
+            defineSolution();
+            for (int i = 0; i < heads; i++) {
+                coins.add("H");
+            }
+            for (int i = 0; i < tails; i++) {
+                coins.add("T");
+            }
+            coins.add(0, "_");
+            coins.add(1, "_");
+            coins.add("_");
+            coins.add("_");
+            int steps = 0;
+            int count = 0;
+            boolean isInOrder = false;
+//        while (isInOrder == false) {
+//             ArrayList<String> para2 = new ArrayList<>();
+//            if (count == total - 1) {
+//                count = 0;
+//                steps++;
+//            }
+//            if (sorting(coins, para2, "", 0, total, total) == 1) {
+//                if (steps == 0) {
+//                    steps++;
+//                }
+//                isInOrder = true;
+//                return;
+//            }
+//
+//            String treeN = tree.get(steps).get(count);
+//            for (int i = 0; i < coins.size(); i++) {
+//                coins.set(i, treeN.substring(i, i + 1));
+//            }
+//            count++;
+//        }
+//        if (steps == 0) {
+//            steps = 1;
+//        }
+
+//steps+=2;
+//steps+=heads/7;
+            System.out.println(calculate());
         }
-        //while (!isInOrder(1,total)) {
-            arrange(heads,tails);
-            steps++;
-            arrange(heads,tails);
-            printArrayList();
-            steps++;
-            arrange(heads,tails);
-            printArrayList();
-            arrange(heads,tails);
-            printArrayList();
-            steps++;
-        //}
-        System.out.println("Steps: " + steps);
     }
 
-    /**
-     * rearrange the coins.
-     */
-    public static void arrange(int heads, int tails) {
-       
-            if(headsAndTails.get(1).equals("H")&&headsAndTails.get(2).equals("H")){
-                headsAndTails.add("H");headsAndTails.add("H");
-                headsAndTails.set(1, "_");headsAndTails.set(2, "_");
-                 printArrayList();
-            } else {
-                int startIndex = total / 2 - 1;
-                int index = indexOfThreeTs(startIndex);
-                int space = headsAndTails.indexOf("_");
-                if(space==total-1){
-                     headsAndTails.set(space,headsAndTails.get(0) );
-                        headsAndTails.set(space+1, headsAndTails.get(1));
-                        headsAndTails.set(0,"_");
-                         headsAndTails.set(1,"_");
-                }
-                if (index == -1) {
-                    String temp;
-                    
-                    if (space % 2 == 0) {
-                        temp = "TH";
-                        for (int i = space;i<total;i++) {
-                            if (headsAndTails.get(i).equals("T") && (i+1) % 2 == 0
-                                    && headsAndTails.get(i+1).equals("H")&& (i)% 2 != 0) {
-                                headsAndTails.set(space, "T");
-                                headsAndTails.set(space+1, "H");
-                                headsAndTails.set(i, "_");
-                                headsAndTails.set(i+1, "_");
-                            }
-                        }
-                    } else {
-                        temp = "HT";
-                        for (int i = space;i<total;i++) {
-                            if (headsAndTails.get(i).equals("H") && (i) % 2 == 0
-                                    && headsAndTails.get(i+1).equals("T")&& (i+1)% 2 != 0) {
-                                headsAndTails.set(space, "H");
-                                headsAndTails.set(space+1, "T");
-                                headsAndTails.set(i, "_");
-                                headsAndTails.set(i+1, "_");
-                            }
-                        }
-                    }
+//    public static int sorting(ArrayList<String> coins, ArrayList<String> combs, String c, int i, int T, int total) {
+//        if (i == 0) {
+//            for (int k = 0; k < coins.size(); k++) {
+//                c += coins.get(k);
+//            }
+//        }
+//        int gapI = coins.indexOf("_");
+//        if (i == gapI) {
+//            i += 2;
+//        } else if (i == gapI + 1) {
+//            i += 3;
+//        }
+//        if (total > 5) {
+//            if (i == gapI + total + 2) {
+//                i += 4;
+//            } else if (i == gapI + total + 3) {
+//                i += 5;
+//            }
+//        }
+//        if (!combs.isEmpty()) {
+//
+//            if (T == 1) {
+//                tree.add(new ArrayList<>(combs));
+//                return 0;
+//            }
+//        }
+//        if (i < gapI - 1) {
+//            coins.set(gapI, coins.get(i));
+//            coins.set(i, "_");
+//            coins.set(gapI + 1, coins.get(i + 1));
+//            coins.set(i + 1, "_");
+//        } else if (i > gapI + 1) {
+//            if (i < coins.size() - 1) {
+//                coins.set(gapI, coins.get(i));
+//                coins.set(i, "_");
+//                coins.set(gapI + 1, coins.get(i + 1));
+//                coins.set(i + 1, "_");
+//            }
+//        }
+//
+//        String temp = "";
+//
+//        for (int j = 0; j < coins.size(); j++) {
+//            temp += coins.get(j);
+//        }
+//        combs.add(temp);
+//        if (inOrder(temp, combs.size())) {
+//            tree.add(new ArrayList<>(combs));
+//            printSteps(tree.size(), total);
+//
+//            return 1;
+//        }
+//
+//        for (int t = 0; t < c.length(); t++) {
+//
+//            coins.set(t, c.substring(t, t + 1));
+//        }
+//
+//        for (int t = 0; t < c.length(); t++) {
+//
+//            coins.set(t, c.substring(t, t + 1));
+//        }
+//
+//        return sorting(coins, combs, c, i + 1, T - 1, total);
+//    }
+//    
+//    
+//    public static boolean inOrder(String potSol, int cSize) {
+//        int gap = potSol.indexOf("_");
+//
+//        if (gap == 0 || gap == potSol.length() - 2) {
+//
+//            String finalSolution = potSol.replaceAll("_", "");
+//
+//            if (finalSolution.equals(solutionString)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+    public static int calculate() {
 
-               }else{
-                    if(space<total/2){
-                        headsAndTails.set(space, "T");
-                        headsAndTails.set(space+1, "T");
-                        headsAndTails.set(index, "_");
-                        headsAndTails.set(index+1, "_");
-                    }
+        int s = 0;
+        if (heads == tails) {
+
+            if (heads == 3) {
+                s = 3;
+            } else {
+                s = ((heads / 2) - 1) * 2;
+                if (heads % 2 != 0) { //odd
+                    s += 3;
+                } else { //even
+                    s += 2;
                 }
             }
-        
+        }else{
+            int max= Math.max(heads, tails);
+            s = ((max / 2) - 1) * 2;
+            
+            if (max % 2 != 0) { //odd
+                    s += 3;
+                } else { //even
+                    s += 2;
+                }
+        }
+        return s;
     }
-public static int indexOfThreeTs(int startIndex){
-     for(int i=startIndex;i<total;i++){
-         if(headsAndTails.get(i).equals("T")&&headsAndTails.get(i+1).equals("T")&&
-                 headsAndTails.get(i+2).equals("T")){
-             return i;
-         }
-     }
-     return -1;
-}
-public static int indexOfReversedHT(){
-     for(int i=total+2;i>=1;i--){
-         if(headsAndTails.get(i).equals("T")&&i%2==0&&
-                 headsAndTails.get(i+2).equals("T")){
-             return i;
-         }
-     }
-     return -1;
-}
+
+    public static void printSteps(int treeSize, int total) {
+        int count = 1;
+        while (treeSize / (total - 1) != 0) {
+
+            treeSize = treeSize / (total - 1);
+            count++;
+        }
+
+        System.out.println("Steps: " + count);
+    }
+
     /**
-     * initialize and print the array list based on the sum of the heads and
-     * tails.
+     * initialize the array list based on the sum of the heads and tails.
      */
     public static void initArrayList() {
         headsAndTails = new ArrayList<>();
@@ -140,33 +210,29 @@ public static int indexOfReversedHT(){
                 headsAndTails.add("T");
             }
         }
-        printArrayList();
     }
 
-    /**
-     * check if the list before index n is in the required order.
-     *
-     * @param n the index of the list
-     * @return a boolean that represents if its in order.
-     */
-    public static boolean isInOrder(int start,int end) {
-        if(start==0){
-            start =1;
-        }
-        for (int i = start; i < end; i++) {
-            // can be faster here
-            if (headsAndTails.get(i).equals(headsAndTails.get(i - 1))) {
-                return false;
+    public static void defineSolution() {
+        int h = heads, t = tails;
+        while (t > 0 || h > 0) {
+            if (h < t) {
+                solutionString += "T";
+                t--;
+                if (h > 0) {
+                    solutionString += "H";
+                    h--;
+                }
+            } else {
+                if (h > 0) {
+                    solutionString += "H";
+                    h--;
+                }
+                if (t > 0) {
+                    solutionString += "T";
+                    t--;
+                }
             }
         }
-        return true;
     }
 
-    public static void printArrayList() {
-        String result = "";
-        for (String s : headsAndTails) {
-            result += s+" ";
-        }
-        System.out.println(result);
-    }
 }
